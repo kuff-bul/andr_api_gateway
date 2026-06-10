@@ -33,6 +33,7 @@ eureka:
     prefer-ip-address: ${EUREKA_PREFER_IP_ADDRESS:true}
     instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
 
+
 management:
   endpoints:
     web:
