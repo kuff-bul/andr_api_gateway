@@ -5,10 +5,37 @@ spring:
   application:
     name: api-gateway
 
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: ${KEYCLOAK_CLIENT_ID:gateapp}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:zgLpg32jFz18O4kY47kSERrsbWlO1Qoh}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloak:
+            authorization-uri: ${KEYCLOAK_AUTHORIZATION_URI:http://localhost:8180/realms/keysec/protocol/openid-connect/auth}
+            token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/keysec/protocol/openid-connect/token}
+            jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/keysec/protocol/openid-connect/certs}
+            user-info-uri: ${KEYCLOAK_USER_INFO_URI:http://localhost:8180/realms/keysec/protocol/openid-connect/userinfo}
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/keysec}
+
   cloud:
     gateway:
       server:
         webflux:
+          default-filters:
+            - TokenRelay
           routes:
             - id: flow-manager
               uri: lb://flow-manager

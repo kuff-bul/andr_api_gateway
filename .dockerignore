@@ -1,0 +1,10 @@
+.git
+.idea
+target
+*.log
+*.iml
+.mvn
+mvnw
+mvnw.cmd
+../docker-compose.yml
+keycloak
