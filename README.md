@@ -1,6 +1,9 @@
 # API Gateway
 
 Spring Cloud Gateway routes the FlowManager API through Eureka service discovery.
+For authenticated JWT requests, the gateway reads the Keycloak
+`preferred_username` claim and forwards it to downstream services as
+`X-User-Login`.
 
 ## Prerequisites
 
@@ -24,6 +27,9 @@ POST http://localhost:8082/api/v1/files
 GET  http://localhost:8082/api/v1/files/{id}/status
 GET  http://localhost:8082/api/v1/files/{id}/download
 ```
+
+Clients should not send `X-User-Login` directly. The gateway overwrites that
+header from the authenticated JWT before forwarding the request.
 
 The Eureka URL and server port can be overridden:
 

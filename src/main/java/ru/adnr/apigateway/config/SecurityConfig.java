@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -24,13 +26,11 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableWebFluxSecurity
+@EnableConfigurationProperties(SecurityConfig.KeycloakClientProperties.class)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String clientId;
-
-    public SecurityConfig(@Value("${spring.security.oauth2.client.registration.keycloak.client-id}") String clientId) {
-        this.clientId = clientId;
-    }
+    private final KeycloakClientProperties keycloakClientProperties;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -73,7 +73,7 @@ public class SecurityConfig {
             return List.of();
         }
 
-        Object clientAccess = resourceAccess.get(clientId);
+        Object clientAccess = resourceAccess.get(keycloakClientProperties.clientId());
         if (!(clientAccess instanceof Map<?, ?> clientAccessMap)) {
             return List.of();
         }
@@ -107,5 +107,9 @@ public class SecurityConfig {
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
                 .toList();
+    }
+
+    @ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.keycloak")
+    public record KeycloakClientProperties(String clientId) {
     }
 }

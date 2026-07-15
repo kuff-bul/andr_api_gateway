@@ -28,7 +28,7 @@ spring:
             user-name-attribute: preferred_username
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/keysec}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/keysec/protocol/openid-connect/certs}
 
   cloud:
     gateway:
@@ -47,8 +47,8 @@ spring:
 
   webflux:
     multipart:
-      max-in-memory-size: ${MAX_FILE_SIZE:50MB}
-      max-disk-usage-per-part: ${MAX_FILE_SIZE:50MB}
+      max-in-memory-size: ${MAX_FILE_SIZE:200MB}
+      max-disk-usage-per-part: ${MAX_FILE_SIZE:200MB}
 
 eureka:
   client:
